@@ -2,7 +2,7 @@ http:
  listener:
   host: "localhost"
   port: "8081"
-  path: "/bookmyholiday/{bookingtype}"
+  path: "/indigo/{bookingtype}"
   
 db:
  host : "localhost"
