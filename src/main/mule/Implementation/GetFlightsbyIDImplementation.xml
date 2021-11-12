@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="GetFlightsIDFlow" doc:id="8fbbd0c8-b2b3-4953-ba98-c38eb272cdfb" >
+		<logger level="INFO" doc:name="Logger" doc:id="a4c62146-cb9c-4db7-9461-2f96d1668efb" message="Flight ID called successfully"/>
+	</flow>
+</mule>
