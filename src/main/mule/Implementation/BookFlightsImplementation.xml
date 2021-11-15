@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="PostFlightsFlow" doc:id="8fbbd0c8-b2b3-4953-ba98-c38eb272cdfb" >
+		<logger level="INFO" doc:name="Logger" doc:id="28341240-4e9a-421b-a8e3-7f417a6edd44" message="#[vars.code]"/>
+		<foreach doc:name="For Each" doc:id="87144a23-f5cb-4ff3-808d-da1f8bdf0d70" >
+			<scatter-gather doc:name="Scatter-Gather" doc:id="16737474-311c-4100-9414-2b0aadbe7235" >
+				<route >
+					<db:update doc:name="Update" doc:id="e99b4c9d-fcec-4f1e-a671-f805eb2e5cd3" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE INDIGO_FLIGHT SET EMPTYSEATS=EMPTYSEATS-1 WHERE CODE=:Code]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+"Code" : payload.flightcode
+}]]]></db:input-parameters>
+		</db:update>
+				</route>
+				<route >
+					<db:insert doc:name="Insert" doc:id="84f88c91-8155-49a2-b4ad-07c1f420356c" config-ref="Database_Config">
+						<db:sql ><![CDATA[  INSERT INTO PASSENGER_FLIGHT (FLIGHT_CODE, DEPATUREDATE, ORIGIN, DESTIANTION, PASSENGER_NAME, PASSENGER_AGE) VALUES (:code, :depaturedate, :origin, :destination, :passengername, :page)
+]]></db:sql>
+						<db:input-parameters ><![CDATA[#[{
+	'code' : payload.flightcode,
+	'depaturedate' : payload.departureDate,
+	'origin' : payload.origin,
+	'destination' : payload.destination,
+	'passengername' : payload.passengername,
+	'page' : payload.passengerage
+	
+}]]]></db:input-parameters>
+					</db:insert>
+				</route>
+			</scatter-gather>
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="bcf6223a-ce88-407a-83af-26081fa74e78" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Status" : "Ticked booked successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

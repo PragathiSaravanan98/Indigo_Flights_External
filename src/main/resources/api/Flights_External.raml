@@ -1,0 +1,63 @@
+#%RAML 1.0
+title: Flights_External
+types:
+  SearchFlight: !include data_type/SearchFlightDatatype.raml
+  BookFlight : !include data_type/BookFlightDatatype.raml
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+    responses:
+      401:
+        description: Unauthorized, The client_id or client_secret are not valid or the client does not have access.
+      429:
+        description: The client used all of its request quota for the current period.
+      500:
+        description: An error occurred, see the specific message (Only if it is a WSDL endpoint).
+      503:
+        description: Contracts Information Unreachable.
+/searchflight:
+  is: [client-id-required]
+  get:
+    queryParameters:
+      origin:
+        required: false
+      destination:
+        required: false  
+    responses:
+      200:
+        body:
+          application/json:
+            type: SearchFlight[]
+            examples:
+              output: !include examples/AvailableFlights.raml
+/bookflight:
+  post:
+    body:
+      application/json:
+        type: BookFlight[]
+        examples:
+          input: !include example/BookFlight.raml
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              message: Flight ticked booked successfully.
+              
+/cancelflight:
+  post:
+    body:
+      application/json:
+        type: BookFlight[]
+        examples:
+          input: !include example/BookFlight.raml
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              message: Flight ticked canceled successfully.

@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="GetFlightsFlow" doc:id="8fbbd0c8-b2b3-4953-ba98-c38eb272cdfb" >
 		<db:select doc:name="Select" doc:id="974a2429-8461-4eb3-937c-65966cf6d450" config-ref="Database_Config">
-			<db:sql ><![CDATA[SELECT * FROM INDIGO_FLIGHT]]></db:sql>
+			<db:sql ><![CDATA[SELECT * FROM INDIGO_FLIGHT ]]></db:sql>
 		</db:select>
 		<ee:transform doc:name="Transform Message" doc:id="bcf6223a-ce88-407a-83af-26081fa74e78" >
 			<ee:message >
@@ -17,5 +17,6 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="7e221900-377b-4f3c-8c1c-8251628a5336" message="Select successfull"/>
 	</flow>
 </mule>
